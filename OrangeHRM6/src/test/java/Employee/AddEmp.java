@@ -1,4 +1,4 @@
-//import MercuryDemoTours;
+
 
 package  Employee;
 import org.testng.annotations.Test;
@@ -53,6 +53,10 @@ import org.testng.annotations.*;
 import java.util.concurrent.TimeUnit;
 
 import java.io.File;
+import java.awt.Robot;
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.KeyEvent;
 import java.io.*;
 
 import org.apache.commons.io.FileUtils;
@@ -73,11 +77,11 @@ import java.net.MalformedURLException;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import java.util.*;
 /*
- Openbrowser
- openurL
- login
- Addemp
- logout
+ 1. Open Chrome browser
+ 2. open Orange Application urL
+ 3. login
+ 4. Add employee details
+ 5. logout and Quit
  */
 
  
@@ -85,12 +89,14 @@ public class AddEmp
 {
 	public String UserName,Password;
 	public String FirstName,MiddleName,LastName,Id;
+	public String PhotoPath;
 	
 	public  int iRow;
-	
+	public  String sRow;
 	
 	WebDriver driver;
 	String HtmlOutputFileName="";
+	
 	String error;
 	TestHTMLReporter6 TH3;
 
@@ -101,60 +107,54 @@ public class AddEmp
 			  this.TH3=TH3;
 	}
 	
+	
 	// Draws a red border around the found element. Does not set it back anyhow.
-		public WebElement findElement(By by)throws Exception {
-		    WebElement elem = driver.findElement(by);
-		 
-		    // draw a border around the found element
-		    if (driver instanceof JavascriptExecutor) {
-		        ((JavascriptExecutor)driver).executeScript("arguments[0].style.border='3px solid red'", elem);
-		    } 
-		    Thread.sleep(1000);
-		    
-		    return elem;
-		}
-		
-		
+	public WebElement findElement(By by)throws Exception {
+	    WebElement elem = driver.findElement(by);
+	 
+	    // draw a border around the found element
+	    if (driver instanceof JavascriptExecutor) {
+	        ((JavascriptExecutor)driver).executeScript("arguments[0].style.border='3px solid red'", elem);
+	    } 
+	    Thread.sleep(10);
+	    
+	    return elem;
+	    
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	@Test
 	public  void AddEmp_datadriventest( )throws Exception
 	{  
-		
-		
-		
-		
-		  ExcelApiTest3 eat = new ExcelApiTest3();
-		  int numberowsInputdata=eat.getRowCount("D://TC01_AddEmp.xls","Sheet1");
-
+		TH3= new TestHTMLReporter6();
+		driver=TestBrowser.OpenChromeBrowser();	
+		HtmlOutputFileName=TH3.CretaeHTMLFile("TC01_Add_Employee","Chrome");
+		ExcelApiTest3 eat = new ExcelApiTest3();
+		int numberowsInputdata=eat.getRowCount("C://HTML Report//OrangeHRM6//TC01_AddEmp.xls","Sheet1");
 				 for(int i=1;i<numberowsInputdata;i++)
 				 {		 
-					 UserName="Admin";
+					 UserName=eat.getCellData("C://HTML Report//OrangeHRM6//TC01_AddEmp.xls","Sheet1",i,0);
+					 Password=eat.getCellData("C://HTML Report//OrangeHRM6//TC01_AddEmp.xls","Sheet1",i,1);
 					 
-					 Password="admin123";
-					 
-					
-					 FirstName=eat.getCellData("D://TC01_AddEmp.xls","Sheet1",i,0);
-					 MiddleName=eat.getCellData("D://TC01_AddEmp.xls","Sheet1",i,1);
-					 LastName=eat.getCellData("D://TC01_AddEmp.xls","Sheet1",i,2);
-					 Id=eat.getCellData("D://TC01_AddEmp.xls","Sheet1",i,3);
-					 
-					 
-					 System.out.println("FirstName is"+FirstName);
-					 System.out.println(" MiddleName is "+MiddleName);
-					 System.out.println(" LastName is "+LastName);
-					 System.out.println(" Id is "+Id);
-					  iRow=i;
-					  
-						call_allmethods(iRow);
-						
-						
-						
-					 
-				 }
-			
-				 
-				 driver.quit();
-				 
+					 FirstName=eat.getCellData("C://HTML Report//OrangeHRM6//TC01_AddEmp.xls","Sheet1",i,2);
+					 MiddleName=eat.getCellData("C://HTML Report//OrangeHRM6//TC01_AddEmp.xls","Sheet1",i,3);
+					 LastName=eat.getCellData("C://HTML Report//OrangeHRM6//TC01_AddEmp.xls","Sheet1",i,4);
+					 Id=eat.getCellData("C://HTML Report//OrangeHRM6//TC01_AddEmp.xls","Sheet1",i,5);
+					 PhotoPath=eat.getCellData("C://HTML Report//OrangeHRM6//TC01_AddEmp.xls","Sheet1",i,6);
+					 iRow=i;
+					call_allmethods(iRow);		 
+	            }
+				 TH3.HTMLCloser(HtmlOutputFileName);
+				 TH3=null;
+				 System.gc();
+				 driver.quit();			 
 	}
 	
 	
@@ -164,80 +164,127 @@ public class AddEmp
 	{  
 		
 		String str=String.valueOf(iRow);
-		TH3= new TestHTMLReporter6();
-		HtmlOutputFileName=TH3.CretaeHTMLFile("TC01_Add_Employee_Iteration_" + str,"Chrome");
-		
-		
-		if (iRow==1)
-		{
-			
-		driver=TestBrowser.OpenChromeBrowser();	
-		
-		Login l1=new Login();
-		l1.Login(driver ,HtmlOutputFileName,TH3);
-	
-		l1.openOrangeHRM();
-		l1.OrangeHRMlogin(UserName,Password);
-		
-		TH3.HTMLScreenShot("Enter user Name and Password","User Name and password Succefully Entered","Pass", HtmlOutputFileName,driver);
-		l1.OrangeHRMSigninClick();
 
-		
-		}
-		
-		
-		
+			if (iRow==1)
+			{
+					Login l1=new Login();
+					l1.Login(driver ,HtmlOutputFileName,TH3);
+					l1.openOrangeHRM();
+					l1.OrangeHRMlogin(UserName,Password);
+					l1.OrangeHRMSigninClick();
+		 }
 		AddEmp AE =new AddEmp();
 		AE.AddEmp(driver,HtmlOutputFileName,TH3 );
-		AE.addEmp1(iRow, FirstName, MiddleName, LastName, Id);
-		TH3.HTMLCloser(HtmlOutputFileName);
-		TH3=null;
-		System.gc();
-
+		AE.addEmpdetails(iRow, FirstName, MiddleName, LastName, Id);
+		AE.PhotoUpload(iRow,PhotoPath);
 		
+		TH3.HTMLScreenShot("TC01_Add_Employee_Iteration_" + str,
+				"Add Employee Iteration_"+ str ,"Pass", HtmlOutputFileName,driver);
 	}	
 	
 	
+	
+	public   void PhotoUpload(int iRow , String PhotoPath)throws Exception
+	{
+		
+
+		
+	findElement(By.xpath("//*[@id='photofile']")).click();
+
+	
+		Thread.sleep(1000);
+		 
+		// Specify the file location with extension
+		// StringSelection sel = new StringSelection("C:\\Users\\Sudhakar\\Desktop\\download1.jpg");
+		 
+		StringSelection sel = new StringSelection(PhotoPath);
+		   // Copy to clipboard
+		 Toolkit.getDefaultToolkit().getSystemClipboard().setContents(sel,null);
+		 System.out.println("selection" +sel);
+		 
+		 // Create object of Robot class
+		 Robot robot = new Robot();
+		 Thread.sleep(2000);
+		      
+		  // Press Enter
+		 robot.keyPress(KeyEvent.VK_ENTER);
+		 robot.keyRelease(KeyEvent.VK_ENTER);
+		 
+		  // Press CTRL+V
+		 robot.keyPress(KeyEvent.VK_CONTROL);
+		 robot.keyPress(KeyEvent.VK_V);
+		 
+		// Release CTRL+V
+		 robot.keyRelease(KeyEvent.VK_CONTROL);
+		 robot.keyRelease(KeyEvent.VK_V);
+		 Thread.sleep(2000);
+		        
+		       //  Press Enter 
+		 robot.keyPress(KeyEvent.VK_ENTER);
+		 robot.keyRelease(KeyEvent.VK_ENTER);
+		 
+		 Thread.sleep(8000);
+	
+		findElement(By.xpath(OR.Emp_save_click)).click();
+		
+		TH3.HTMLScreenShot("Add Employee Page -  Select Photo to Photo  ","Upload photo selected","Pass", HtmlOutputFileName,driver);
+		Thread.sleep(8000);
+		 
+		 TH3.HTMLScreenShot("Add Employee Page -  Upload Photo  ","Photo Uploaded","Pass", HtmlOutputFileName,driver);
+		 
+		
+		
+	}
+	
+	
+	
 
 
-	public   void addEmp1(int iRow,String FirstName,String MiddleName,String LastName,String Id )throws Exception
+	public   void addEmpdetails(int iRow,String FirstName,String MiddleName,String LastName,String Id )throws Exception
 	{  
 		
-		System.out.println("reached here");
+
 		try 
 		{
 		
+
 		
-		Actions actions = new Actions(driver);   
-		System.out.println("reached here1");
-		 WebElement ele=driver.findElement(By.xpath(OR.Emp_Pim_focus1));
+		 Actions actions = new Actions(driver);   
+		 System.out.println("reached here1");
+
+		 
+		 WebElement ele=findElement(By.xpath(OR.Emp_Pim_focus1));
 		 actions.moveToElement(ele).click().perform();
-		 TH3.HTMLScreenShot("Pim focus highlight","Pim  clicked Succefully ","Pass", HtmlOutputFileName,driver);
-		 System.out.println("reached here2");
-		 driver.findElement(By.xpath(OR.Emp_list_focus)).click();
-		 TH3.HTMLScreenShot("Emp focus highlight","Emp focus highlighted Succefully ","Pass", HtmlOutputFileName,driver);
-		 
-		 driver.findElement(By.xpath(OR.Emp_pimadd_click)).click();
-		 TH3.HTMLScreenShot("Click Emp pim Add  ","Emp PIM Add clicked","Pass", HtmlOutputFileName,driver);
+		 TH3.HTMLScreenShot("Add Employee Page -  Highlight PIM Navigation  ","Pim Navigation clicked ","Pass", HtmlOutputFileName,driver);
 		 
 		 
-		 driver.findElement(By.xpath(OR.Emp_firstname_sendkey)).sendKeys(FirstName);
-		 TH3.HTMLScreenShot("Enter FirstName","FirstName Succefully Entered","Pass", HtmlOutputFileName,driver);
+		 findElement(By.xpath(OR.Emp_list_focus)).click();
+		 TH3.HTMLScreenShot("Add Employee Page - Highlight Employee Navigation","Employee Navigation Clicked ","Pass", HtmlOutputFileName,driver);
+		 
+		 
 		
-		 driver.findElement(By.xpath(OR.Emp_middlename_sendkey)).sendKeys(MiddleName);
-		 TH3.HTMLScreenShot("Enter MiddleName","MiddleName Succefully Entered","Pass", HtmlOutputFileName,driver);
+		findElement(By.xpath(OR.Emp_pimadd_click)).click();
+		TH3.HTMLScreenShot("Add Employee Page - Click on Add Employee button ","Add Employee button clicked","Pass", HtmlOutputFileName,driver);
 		 
 		 
-		 driver.findElement(By.xpath(OR.Emp_lastname_sendkey)).sendKeys(LastName);
-		 TH3.HTMLScreenShot("Enter LastName","LastName Succefully Entered","Pass", HtmlOutputFileName,driver);
+		
+		 findElement(By.xpath(OR.Emp_firstname_sendkey)).sendKeys(FirstName);
+		 TH3.HTMLScreenShot("Add Employee Page - Enter FirstName","FirstName Entered","Pass", HtmlOutputFileName,driver);
+		
 		 
+		
+		 findElement(By.xpath(OR.Emp_middlename_sendkey)).sendKeys(MiddleName);
+		 TH3.HTMLScreenShot("Add Employee Page - Enter MiddleName","MiddleName Entered","Pass", HtmlOutputFileName,driver);
 		 
-		 driver.findElement(By.xpath(OR.Emp_id_sendkey)).sendKeys(Id);
-		 TH3.HTMLScreenShot("Enter Id","Id Succefully Entered","Pass", HtmlOutputFileName,driver);
+		
+		 findElement(By.xpath(OR.Emp_lastname_sendkey)).sendKeys(LastName);
+		 TH3.HTMLScreenShot("Add Employee Page - Enter LastName","LastName Entered","Pass", HtmlOutputFileName,driver);
 		 
+		
+		 findElement(By.xpath(OR.Emp_id_sendkey)).sendKeys(Id);
+		 TH3.HTMLScreenShot("Add Employee Page - Enter Employee Id"," Employee Id Entered","Pass", HtmlOutputFileName,driver);
 		 
-		 driver.findElement(By.xpath(OR.Emp_save_click)).click();
-		 
+
 		
 	
 		} 
@@ -250,5 +297,4 @@ public class AddEmp
 	}
 	
 
-	
 }

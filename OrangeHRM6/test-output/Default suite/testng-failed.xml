@@ -3,13 +3,11 @@
 <suite name="Failed suite [Default suite]" guice-stage="DEVELOPMENT">
   <test thread-count="5" name="Default test(failed)">
     <classes>
-      <class name="UserManagement.AddUser">
+      <class name="Emp_Mallika.Edit_emp_ReportTo">
         <methods>
-          <include name="AftersuiteSetup2"/>
-          <include name="Data_driven_test"/>
-          <include name="suiteSetup1"/>
+          <include name="EmpDet_datadriventest"/>
         </methods>
-      </class> <!-- UserManagement.AddUser -->
+      </class> <!-- Emp_Mallika.Edit_emp_ReportTo -->
     </classes>
   </test> <!-- Default test(failed) -->
 </suite> <!-- Failed suite [Default suite] -->

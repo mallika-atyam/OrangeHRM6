@@ -186,6 +186,40 @@ public static String Emp_id_sendkey="//*[@id='employeeId']";
 public static String Emp_save_click="//*[@id='btnSave']";
 
 public static String Emp_pimadd_click="//input[@id='btnAdd']";
+// Employee personal details edit 
+public static String EMP_personalDet="//*[@id='sidenav']/li[1]/a";
+public static String Emp_Edit="//*[@id='btnSave']";
+public static String EMP_Edit_fullname="//*[@id='personal_txtEmpFirstName']";
+public static String EMP_Edit_midname="//*[@id='personal_txtEmpMiddleName']";
+public static String EMP_Edit_lastname="//*[@id='personal_txtEmpLastName']";
+public static String EMP_Edit_id="//*[@id='personal_txtEmployeeId']";
+public static String Emp_DrLicNo="//*[@id='personal_txtLicenNo']";
+public static String Emp_OtherId="//*[@id='personal_txtOtherID']";
+public static String Emp_GenMale_radiobtn="//*[@id='personal_optGender_1']";
+public static String Emp_GenFemale_radiobtn="//*[@id='personal_optGender_2']";
+public static String Emp_MaritalStat="//*[@id='personal_cmbMarital']";
+public static String Emp_Nationality="//*[@id='personal_cmbNation']";
+public static String Emp_Edit_save="//*[@id='btnSave']";
+public static String Emp_attachBtn="//*[@id='btnAddAttachment']";
+public static String Emp_attachFilePick="//*[@id='ufile']";
+public static String Emp_attachDes="//*[@id='txtAttDesc']";
+public static String Emp_attachUploadBtn="//*[@id='btnSaveAttachment']";
+
+//Employee reportTo details edit
+public static String EMP_ReportTo="//*[@id='sidenav']/li[8]/a";
+public static String EMP_SupAddBtn="//*[@id='btnAddSupervisorDetail']";
+public static String EMP_SupDelBtn="//*[@id='delSupBtn']";
+public static String EMP_SupName="//*[@id='reportto_supervisorName_empName']";
+public static String EMP_SupRepMetod="//*[@id='reportto_reportingMethodType']";
+public static String EMP_SupSaveBtn="//*[@id='btnSaveReportTo']";
+public static String EMP_SubAddBtn="//*[@id='btnAddSubordinateDetail']";
+public static String EMP_SubDelBtn="//*[@id='delSubBtn']";
+public static String EMP_SubName="//*[@id='reportto_subordinateName_empName']";
+public static String EMP_SubRepMethod="//*[@id='reportto_reportingMethodType']";
+public static String EMP_SubSaveBtn="//*[@id='btnSaveReportTo']";
+public static String EMP_ReportToAttachBtn="//*[@id='btnAddAttachment']";
+public static String EMP_ReportAttachFilePick="//*[@id='ufile']";
+public static String EMP_ReportAttachUpload="//*[@id='btnSaveAttachment']";
 
 
 

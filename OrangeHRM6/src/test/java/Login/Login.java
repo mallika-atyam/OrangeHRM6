@@ -92,7 +92,19 @@ public class Login
 			  this.TH3=TH3;
 	}
 	
-	
+	// Draws a red border around the found element. Does not set it back anyhow.
+			public WebElement findElement(By by)throws Exception {
+			    WebElement elem9 = driver.findElement(by);
+			 
+			    // draw a border around the found element
+			    if (driver instanceof JavascriptExecutor) {
+			        ((JavascriptExecutor)driver).executeScript("arguments[0].style.border='3px solid red'", elem9);
+			    } 
+			    Thread.sleep(1000);
+			    
+			    return elem9;
+			}
+			
 		 
 		 public  void openOrangeHRM()throws Exception
 		 {
@@ -104,15 +116,15 @@ public class Login
 		 public  void OrangeHRMlogin(String Username,String Password)throws Exception
 		 {
 			 
-		 //driver.findElement(By.xpath(OR.username)).sendKeys("Admin");
-		// driver.findElement(By.xpath(OR.password)).sendKeys("admin123");
+		 //findElement(By.xpath(OR.username)).sendKeys("Admin");
+		// findElement(By.xpath(OR.password)).sendKeys("admin123");
 		
-			 driver.findElement(By.xpath(OR.username_sendkey)).sendKeys(Username);
+			 findElement(By.xpath(OR.username_sendkey)).sendKeys(Username);
 			 
 			 TH3.HTMLScreenShot("Enter user Name ","User Name Succefully Entered","Pass", HtmlOutputFileName,driver);
 			 
 			 
-			 driver.findElement(By.xpath(OR.password_sendkey)).sendKeys(Password);
+			 findElement(By.xpath(OR.password_sendkey)).sendKeys(Password);
 			 TH3.HTMLScreenShot("Enter Password","password Succefully Entered","Pass", HtmlOutputFileName,driver);
 				
 		 }
@@ -122,7 +134,7 @@ public class Login
 		 public  void OrangeHRMSigninClick()throws Exception
 		 {
 			 
-			 	driver.findElement(By.xpath(OR.login_click)).click();
+			 	findElement(By.xpath(OR.login_click)).click();
 			 	
 		 }
 		 

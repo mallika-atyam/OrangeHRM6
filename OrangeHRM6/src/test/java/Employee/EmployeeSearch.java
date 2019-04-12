@@ -72,15 +72,18 @@ import java.net.URL;
 import java.net.MalformedURLException;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import java.util.*;
-/*
- Openbrowser
- openurL
- login
- boolean,name,id,JOBTITLE
- export
- logout
- */
 
+
+/*
+1. Open Chrome browser
+2. open Orange Application urL
+3. login
+4. Navigate to employee screen
+5. Search for particular record serach by EMPNAME,EMPID,JOBTITLE
+6. If Record match as per search results , HTML Report captures the resuts accordingly
+5. logout and Quit
+*/
+ 
  
 public class EmployeeSearch
 {
@@ -92,6 +95,7 @@ public class EmployeeSearch
 	WebDriver driver;
 	String HtmlOutputFileName="";
 	String error;
+	
 	TestHTMLReporter6 TH3;
 	
 
@@ -102,47 +106,81 @@ public class EmployeeSearch
 			  this.TH3=TH3;
 	}
 	
+
+
+	
+
+	
+	public WebElement findElement(By by)throws Exception {
+	    WebElement elem = driver.findElement(by);
+	 
+	    // draw a border around the found element
+	    if (driver instanceof JavascriptExecutor) {
+	        ((JavascriptExecutor)driver).executeScript("arguments[0].style.border='3px solid red'", elem);
+	    } 
+	    Thread.sleep(10);
+	    
+	    return elem;
+	    
+	}
+	
+	
+	
+	
+	
+	
+	
 	
 	@Test
 	public  void boolean_datadriventest( )throws Exception
 	{  
+		TH3= new TestHTMLReporter6();
+		HtmlOutputFileName=TH3.CretaeHTMLFile("TC02_Search_Employee","Chrome");
+		driver=TestBrowser.OpenChromeBrowser();
+	
 		
 		  ExcelApiTest3 eat = new ExcelApiTest3();
-		  int numberowsInputdata=eat.getRowCount("E://TC02_BOOLEAN.xls","Sheet1");
-
+		  
+		  
+		  int numberowsInputdata=eat.getRowCount("C://HTML Report//OrangeHRM6//TC02_EmployeeSearch.xls","Sheet1");
+		 
 				 for(int i=1;i<numberowsInputdata;i++)
 				 {		 
-					 UserName=eat.getCellData("E://TC02_BOOLEAN.xls","Sheet1",i,0);
-					 Password=eat.getCellData("E://TC02_BOOLEAN.xls","Sheet1",i,1);
-					 EMPNAME=eat.getCellData("E://TC02_BOOLEAN.xls","Sheet1",i,3);
-					 EMPID=eat.getCellData("E:/TC02_BOOLEAN.xls","Sheet1",i,2);
-					 JOBTITLE=eat.getCellData("E://TC02_BOOLEAN.xls","Sheet1",i,4);
+					 UserName=eat.getCellData("C://HTML Report//OrangeHRM6//TC02_EmployeeSearch.xls","Sheet1",i,0);
+					 Password=eat.getCellData("C://HTML Report//OrangeHRM6//TC02_EmployeeSearch.xls","Sheet1",i,1);
+					
+					 EMPNAME=eat.getCellData("C://HTML Report//OrangeHRM6//TC02_EmployeeSearch.xls","Sheet1",i,3);
+					 EMPID=eat.getCellData("C://HTML Report//OrangeHRM6//TC02_EmployeeSearch.xls","Sheet1",i,2);
+					 JOBTITLE=eat.getCellData("C://HTML Report//OrangeHRM6//TC02_EmployeeSearch.xls","Sheet1",i,4);
 					 
 					
 					  iRow=i;
-					 call_allmethods(iRow);
+					 call_allmethods(iRow,HtmlOutputFileName);
 					 
 				 }
 			
+				 	TH3.HTMLCloser(HtmlOutputFileName);
+					TH3=null;
+					System.gc();
 				 
-				 driver.quit();
+					driver.quit();
 				 
 	}
 	
 	
 	
 	
-	public   void call_allmethods(int iRow )throws Exception
+	public   void call_allmethods(int iRow,String HtmlOutputFileName )throws Exception
 	{  
 		
 		String str=String.valueOf(iRow);
-		TH3= new TestHTMLReporter6();
-		HtmlOutputFileName=TH3.CretaeHTMLFile("TC01_Search_Employee_Iteration_" + str,"Chrome");
+	
 		 
 	
 		if(iRow==1)
 		{
-		driver=TestBrowser.OpenChromeBrowser();
+		
+		//driver=TestBrowser.OpenChromeBrowser();
 		Login l1=new Login();
 		l1.Login(driver ,HtmlOutputFileName,TH3);
 		l1.openOrangeHRM();
@@ -161,7 +199,6 @@ public class EmployeeSearch
 		//Search by UserRole
 	
 			Boolean str1=false;
-			
 			str1=Bl.Search_NAME_ID_JOBTITLE(iRow, EMPNAME, EMPID, JOBTITLE);	
 			
 
@@ -187,9 +224,11 @@ public class EmployeeSearch
 			
 			TH3.HTMLScreenShot("Serach Employee Results","Results matched - Test Purpose","Pass", HtmlOutputFileName,driver);
 			
-			TH3.HTMLCloser(HtmlOutputFileName);
-			TH3=null;
-			System.gc();
+			
+			TH3.HTMLScreenShot("TC02_Search_Employee_Iteration_" + str,
+					"Search Employee Iteration_"+ str ,"Pass", HtmlOutputFileName,driver);
+			
+			
 			
 			
 					
@@ -209,25 +248,23 @@ public class EmployeeSearch
 			System.out.println("EMPID IS : "+ EMPID);
 			System.out.println("EMPJOBTITLE is : "+ JOBTITLE);
 			Boolean Record_Present=false;
-			//driver.findElement(By.xpath(OR.Admin)).click();	
-			
-			System.out.println("reached here1");
+			//findElement(By.xpath(OR.Admin)).click();	
+		
 			
 		     Actions actions = new Actions(driver);   
-			 WebElement ele=driver.findElement(By.xpath(OR.BSpimfocus));
-			 actions.moveToElement(ele).click().perform();
+			 WebElement ele=findElement(By.xpath(OR.BSpimfocus));
 			 
-			 driver.findElement(By.xpath(OR.BSEMPCLICK)).click();
-			 
-			System.out.println("reached here2");
+			 actions.moveToElement(ele).click().perform();	 
+			 findElement(By.xpath(OR.BSEMPCLICK)).click();
+
 			
-			 driver.findElement(By.xpath(OR.BSEMPNAMESENDKEY)).sendKeys(EMPNAME);
-			 driver.findElement(By.xpath(OR.BSIDSENDKEY)).sendKeys(EMPID);
+			 findElement(By.xpath(OR.BSEMPNAMESENDKEY)).sendKeys(EMPNAME);
+			 findElement(By.xpath(OR.BSIDSENDKEY)).sendKeys(EMPID);
 			 
-			 Select listbox =new Select(driver.findElement(By.xpath(OR.BSJOBTITLELISTBOX)));
+			 Select listbox =new Select(findElement(By.xpath(OR.BSJOBTITLELISTBOX)));
 			 listbox.selectByVisibleText(JOBTITLE);
 			 
-			 driver.findElement(By.xpath(OR.BSSEARCHCLICK)).click();
+			 findElement(By.xpath(OR.BSSEARCHCLICK)).click();
 
 			 
 
@@ -241,13 +278,16 @@ public class EmployeeSearch
 	        
 					    for ( int i=1 ; i<=rows.size() ;i++)
 					    {
+					    	
+					    	
+					    	//*[@id="resultTable"]/tbody/tr/td
+					    	
+					    	//No Records Found
+					    	
 					      	String str1="//*[@id='resultTable']/tbody/tr["  + i +  "]"  + "/td" + "["+ 2 +"]";
 					      	WebElement CellText1=driver.findElement(By.xpath(str1));
 					    	String EMPID1 = CellText1.getText();
 					       
-					    
-					    	
-					    	
 					    	String str2="//*[@id='resultTable']/tbody/tr["  + i +  "]"  + "/td" + "[" + 3 + "]";
 					      	WebElement CellText2=driver.findElement(By.xpath(str2));
 					    	String EMPNAME1 = CellText2.getText();
@@ -256,20 +296,25 @@ public class EmployeeSearch
 					    	String str3="//*[@id='resultTable']/tbody/tr["  + i +  "]"  + "/td" + "[" + 4 + "]";
 					      	WebElement CellText3=driver.findElement(By.xpath(str3));
 					    	String JOBTITLE1 = CellText3.getText();
-					       
-	   	if ( EMPID.equals(EMPID1 ) &&  EMPNAME.equals(EMPNAME1 ) &&  JOBTITLE.equals(JOBTITLE ))
-	    	{
-	  	 Record_Present=true;
-	   	 System.out.println("True- EMPID Text Value is: " + EMPID1);
-	   	 return Record_Present;
-	   	 //Employee ID exist in employee list
-						    	}
-						    	else
-						    	{
+									       
+					   	if ( EMPID.equals(EMPID1 ) &&  EMPNAME.equals(EMPNAME1 ) &&  JOBTITLE.equals(JOBTITLE ))
+					    	{
+								  	 Record_Present=true;
+		
+								  findElement(By.xpath(str1));
+								  findElement(By.xpath(str2));
+								  findElement(By.xpath(str3));
+								  	 
+								   	 System.out.println("True- EMPID Text Value is: " + EMPID1);
+								   	 return Record_Present;
+		
+							 }
+						  else
+						   {
 						    		 System.out.println("Cell Text EMPID is:" + EMPID1);
 						    		 System.out.println("Cell Text EMPNAME is:" + EMPNAME1);
 								     System.out.println("Seracching for JOBTITLE is:" +JOBTITLE1);
-						    	}
+						   }
 						    	
 						  					    	
 					    }  //After for loop
@@ -285,25 +330,25 @@ public class EmployeeSearch
 				
 				public  void ExportEMPIDNAME()throws Exception
 				{ 
-					  Actions actions = new Actions(driver);   
-						 WebElement ele=driver.findElement(By.xpath(OR.BSpimfocus));
+					     Actions actions = new Actions(driver);   
+						 WebElement ele=findElement(By.xpath(OR.BSpimfocus));
 						 actions.moveToElement(ele).click().perform();
 						 
-						 driver.findElement(By.xpath(OR.BSEMPCLICK)).click();
+						 findElement(By.xpath(OR.BSEMPCLICK)).click();
 						 
-						System.out.println("reached here2");
+			
 						
 						
 						 
-						 driver.findElement(By.xpath(OR.BSSEARCHCLICK)).click();
+						 findElement(By.xpath(OR.BSSEARCHCLICK)).click();
 
 						 
-//No. of columns
+						 	//No. of columns
 						 List  columns = driver.findElements(By.xpath(OR.BSCOLOUMNS)); 
 					        System.out.println("No of columns are : " + columns.size());
 					        
 					        //No.of rows 
-					        List  rows = driver.findElements(By.xpath(OR.BSROWS)); 
+					        List  rows =driver. findElements(By.xpath(OR.BSROWS)); 
 					        System.out.println("No of rows are : " + rows.size());
 					         
 			       
@@ -315,44 +360,33 @@ public class EmployeeSearch
 							    	  for ( int j=2 ,k=0; j<=columns.size() ;j++,k++)
 							    	   {
 							    		  
-							    		  System.out.println("hai....112");
+							    		//  System.out.println("hai....112");
 							      		   String str1="//*[@id='resultTable']/tbody/tr["  + i +  "]"  + "/td" + "[" + j + "]";
 							      		   
 							      		 String str2="//*[@id='resultTable']/tbody/tr["  + i +  "]"  + "/td" + "[" + j + "]";
 							      		 
 							      		 String str3="//*[@id='resultTable']/tbody/tr["  + i +  "]"  + "/td" + "[" + j + "]";
-							      		 System.out.println("hai....113");
+							      		// System.out.println("hai....113");
 							      		 
 							      		//*[@id='recordsListTable']/thead/tr/th
 							    		   
 							      		 WebElement CellText1=driver.findElement(By.xpath(str1));
 							      		 WebElement CellText2=driver.findElement(By.xpath(str2));
 							      		 WebElement CellText3=driver.findElement(By.xpath(str3));
-							    		    System.out.println("hai....114");
+							    ;
 							    		   
 							    	        String valueIneed1 = CellText1.getText();
 							    	        String valueIneed2 = CellText2.getText();
 							    	        String valueIneed3 = CellText3.getText();
 							    	        
-							    	        System.out.println("Cell Text Value is: " + valueIneed1);
+							    	   
 							    	        
 							    	        if (valueIneed1 !=null)
-							    	        eat.PutCellData( "E://BOOLEAN//TC02_BOOLEAN.xls","Sheet5",i,k,valueIneed1);
+							    	        eat.PutCellData( "C://HTML Report//OrangeHRM6//TC02_EmployeeSearchExport.xls","Sheet2",i,k,valueIneed1);
 							    	        else
-							    	        eat.PutCellData( "E://BOOLEAN//TC02_BOOLEAN.xls","Sheet5",i,k,"Blank Data");
+							    	        eat.PutCellData("C://HTML Report//OrangeHRM6//TC02_EmployeeSearchExport.xls","Sheet2",i,k,"Blank Data");
 							    	        	
-							    	        
-							    	        if (valueIneed2 !=null)
-								    	        eat.PutCellData( "E://BOOLEAN//TC02_BOOLEAN.xls","Sheet5",i,k,valueIneed2);
-								    	        else
-								    	        eat.PutCellData( "E://BOOLEAN//TC02_BOOLEAN.xls","Sheet5",i,1,"Blank Data");
-								    	        
-							    	        
-							    	        if (valueIneed3 !=null)
-								    	        eat.PutCellData( "E://BOOLEAN//TC02_BOOLEAN.xls","Sheet5",i,k,valueIneed3);
-								    	        else
-								    	        eat.PutCellData( "E://BOOLEAN//TC02_BOOLEAN.xls","Sheet5",i,k  ,"Blank Data");
-								    	        
+							    	     
 							    	   }
 							    }
 			   

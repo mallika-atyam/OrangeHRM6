@@ -73,7 +73,14 @@ import java.net.MalformedURLException;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import java.util.*;
 
-
+/*
+1. Open Chrome browser
+2. open Orange Application urL
+3. login
+4. Navigate to employee screen
+5. Export Employees to Excel sheet
+5. logout and Quit
+*/
  
 public class ExportEmployees
 {
@@ -95,6 +102,21 @@ public class ExportEmployees
 			  this.TH3=TH3;
 	}
 	
+	// Draws a red border around the found element. Does not set it back anyhow.
+		public WebElement findElement(By by)throws Exception {
+		    WebElement elem = driver.findElement(by);
+		 
+		    // draw a border around the found element
+		    if (driver instanceof JavascriptExecutor) {
+		        ((JavascriptExecutor)driver).executeScript("arguments[0].style.border='3px solid red'", elem);
+		    } 
+		    Thread.sleep(10);
+		    
+		    return elem;
+		}
+		
+		
+	
 	
 	
 	
@@ -102,13 +124,18 @@ public class ExportEmployees
 	public  void ExportAllEmployees( )throws Exception
 	{  
 		
+		TH3= new TestHTMLReporter6();
+		HtmlOutputFileName=TH3.CretaeHTMLFile("TC03_Export_Employees","Chrome");
+	    driver=TestBrowser.OpenChromeBrowser();
+			
+		
 			 ExcelApiTest3 eat = new ExcelApiTest3();
-			 int numberowsInputdata=eat.getRowCount("E://OrangeHrm//TC01.xls","Sheet1");
+			 int numberowsInputdata=eat.getRowCount("C://HTML Report//OrangeHRM6//TC01_EMPExport.xls","Sheet1");
 
 				 for(int i=1;i<2;i++)
 				 {		 
-					 UserName=eat.getCellData("E://OrangeHrm//TC01.xls","Sheet1",i,0);
-					 Password=eat.getCellData("E://OrangeHrm//TC01.xls","Sheet1",i,1);
+					 UserName=eat.getCellData("C://HTML Report//OrangeHRM6//TC01_EMPExport.xls","Sheet1",i,0);
+					 Password=eat.getCellData("C://HTML Report//OrangeHRM6//TC01_EMPExport.xls","Sheet1",i,1);
 					 iRow=i;
 					 call_allmethods(iRow);
 				 }
@@ -124,12 +151,7 @@ public class ExportEmployees
 						
 					 
 					String str=String.valueOf(iRow);
-					TH3= new TestHTMLReporter6();
-					HtmlOutputFileName=TH3.CretaeHTMLFile("TC01_Export_Employees","Chrome");
-					 
-					 
-						driver=TestBrowser.OpenChromeBrowser();
-						
+					
 						Login l1=new Login();
 						l1.Login(driver ,HtmlOutputFileName,TH3);
 						l1.openOrangeHRM();
@@ -151,87 +173,19 @@ public class ExportEmployees
 					}
 					
 				 
-					public  Boolean Empname_sech(int iRow,String empname )throws Exception
-					{ 
-						
-						
-						System.out.println("empname is : "+ empname);
-						
-						Boolean Record_Present=false;
-						
-
-					     Actions actions = new Actions(driver);   
-						 WebElement ele=driver.findElement(By.xpath(OR.Pim_focus));
-				         actions.moveToElement(ele).click().perform();
-						 
-						 driver.findElement(By.xpath(OR.Employee_click)).click();
-						 
-						 driver.findElement(By.xpath(OR.Employeename_click)).sendKeys(empname);
-							System.out.println("empname is"+empname);
-									
-						 
-						 driver.findElement(By.xpath(OR.Employee_click)).click();
-						 driver.findElement(By.xpath(OR.Empserch_click)).click();
-						 
-						
-						
-				        //No. of columns
-				        List  columns = driver.findElements(By.xpath(OR.Empcoloums)); 
-				        System.out.println("No of columns are : " + columns.size());
-				        
-				        //No.of rows 
-				        List  rows = driver.findElements(By.xpath(OR.EmpRows)); 
-				        System.out.println("No of rows are : " + rows.size());
-				        
-								    for ( int i=1 ; i<=rows.size() ;i++)
-								    {
-								      	String str1="//*[@id='resultTable']/tbody/tr["  + i +  "]"  + "/td" + "[" + 2 +"]";
-								      	
-								      //*[@id="resultTable"]/tbody/tr[1]/td[2]
-								      	
-								      //*[@id="resultTable234"]/tbody/tr[1]/td[4]
-								      	
-								    
-								        WebElement CellText1=driver.findElement(By.xpath(str1));
-								    		   
-								    	String valueIneed1 = CellText1.getText();
-								       
-								        
-									    	if (empname.equals(valueIneed1) )
-									    	{
-									    	    	 Record_Present=true;
-									    	    	 System.out.println("True- empname Text Value is: " + valueIneed1);
-									    	    	 return Record_Present;
-									    	    	 //Employee ID exist in employee list
-									    	}
-									    	else
-									    	{
-									    		 System.out.println("Cell Text Value is:" + valueIneed1);
-											     System.out.println("Seracching for Employee ID is:" +empname);
-									    	}
-									    	
-									  					    	
-								    }  //After for loop
-								    
-								    System.out.println("*******Employee Serach method completed*****");
-				   
-						return Record_Present;
-		    }  //After for loop
-									    
-									   
 
 					public  void Export_EmployeeDetails()throws Exception
 					{ 
 						
 						
 						 Actions actions = new Actions(driver);   
-						 WebElement ele=driver.findElement(By.xpath(OR.Pim_focus));
+						 WebElement ele=findElement(By.xpath(OR.Pim_focus));
 				         actions.moveToElement(ele).click().perform();
 						 
-						 driver.findElement(By.xpath(OR.Employee_click)).click();
+						 findElement(By.xpath(OR.Employee_click)).click();
 						 
 						
-						 driver.findElement(By.xpath(OR.Empserch_click)).click();
+						 findElement(By.xpath(OR.Empserch_click)).click();
 						
 				        //No. of columns
 				        List  columns = driver.findElements(By.xpath(OR.Empcoloums)); 
@@ -252,21 +206,47 @@ public class ExportEmployees
 								      		   String str1="//*[@id='resultTable']/tbody/tr["  + i +  "]"  + "/td" + "[" + j +"]";
 								      		   
 								      		//*[@id="resultTable"]/tbody/tr[1]/td[2]
-								    		    WebElement CellText1=driver.findElement(By.xpath(str1));
+								    		    WebElement CellText1=findElement(By.xpath(str1));
 								    		   
 								    	        String valueIneed1 = CellText1.getText();
 								    	      //  System.out.println("Cell Text Value is: " + valueIneed1);
 								    	        
 								    	        if (valueIneed1 !=null)
-								    	        eat.PutCellData( "E://OrangeHrm//TC05_empname.xls","Sheet4",i,k,valueIneed1);
+								    	        eat.PutCellData( "C://HTML Report//OrangeHRM6//TC01_EMPExport.xls","Sheet4",i,k,valueIneed1);
 								    	        else
-								    	        eat.PutCellData( "E://OrangeHrm//TC05_empname.xls","Sheet4",i,k,"Blank Data");
+								    	        eat.PutCellData( "C://HTML Report//OrangeHRM6//TC01_EMPExport.xls","Sheet4",i,k,"Blank Data");
 								    	        	
 								    	   }
 								    }
 				   
 					
 					}
+					
+					
+					
+/*
+
+					@BeforeTest
+				    public void suiteSetup1() throws Exception {
+						
+						 String xlsFile="C://HTML Report//HtmlTemplates//TC05.xls";
+						 String xlsFileSheet="Sheet1";
+						 
+						 ExcelApiTest3 eat = new ExcelApiTest3();
+						 eat.clearsheetdata(xlsFile,xlsFileSheet);
+				    }  	
+					
+					@AfterTest
+				  
+				    public void AftersuiteSetup2() throws Exception {
+						 
+						 TestHTMLReporter6 TH8 = new TestHTMLReporter6();	
+						 TH8.Regression_CretaeHTMLFile();
+						 
+				    }    
+				    
+				    					*/
+					
 					
 }
 				        

@@ -101,7 +101,20 @@ public class AddEmp1
 			  this.TH3=TH3;
 	}
 	
-	
+	// Draws a red border around the found element. Does not set it back anyhow.
+		public WebElement findElement(By by)throws Exception {
+		    WebElement elem5 = driver.findElement(by);
+		 
+		    // draw a border around the found element
+		    if (driver instanceof JavascriptExecutor) {
+		        ((JavascriptExecutor)driver).executeScript("arguments[0].style.border='3px solid red'", elem5);
+		    } 
+		    Thread.sleep(1000);
+		    
+		    return elem5;
+		}
+		
+			
 	
 	@Test
 	public  void AddEmp_datadriventest( )throws Exception
@@ -197,33 +210,33 @@ public class AddEmp1
 		
 		Actions actions = new Actions(driver);   
 		System.out.println("reached here1");
-		 WebElement ele=driver.findElement(By.xpath(OR.Emp_Pim_focus1));
+		 WebElement ele=findElement(By.xpath(OR.Emp_Pim_focus1));
 		 actions.moveToElement(ele).click().perform();
 		 TH3.HTMLScreenShot("Pim focus highlight","Pim  clicked Succefully ","Pass", HtmlOutputFileName,driver);
 		 System.out.println("reached here2");
-		 driver.findElement(By.xpath(OR.Emp_list_focus)).click();
+		 findElement(By.xpath(OR.Emp_list_focus)).click();
 		 TH3.HTMLScreenShot("Emp focus highlight","Emp focus highlighted Succefully ","Pass", HtmlOutputFileName,driver);
 		 
-		 driver.findElement(By.xpath(OR.Emp_pimadd_click)).click();
+		 findElement(By.xpath(OR.Emp_pimadd_click)).click();
 		 TH3.HTMLScreenShot("Click Emp pim Add  ","Emp PIM Add clicked","Pass", HtmlOutputFileName,driver);
 		 
 		 
-		 driver.findElement(By.xpath(OR.Emp_firstname_sendkey)).sendKeys(FirstName);
+		 findElement(By.xpath(OR.Emp_firstname_sendkey)).sendKeys(FirstName);
 		 TH3.HTMLScreenShot("Enter FirstName","FirstName Succefully Entered","Pass", HtmlOutputFileName,driver);
 		
-		 driver.findElement(By.xpath(OR.Emp_middlename_sendkey)).sendKeys(MiddleName);
+		 findElement(By.xpath(OR.Emp_middlename_sendkey)).sendKeys(MiddleName);
 		 TH3.HTMLScreenShot("Enter MiddleName","MiddleName Succefully Entered","Pass", HtmlOutputFileName,driver);
 		 
 		 
-		 driver.findElement(By.xpath(OR.Emp_lastname_sendkey)).sendKeys(LastName);
+		 findElement(By.xpath(OR.Emp_lastname_sendkey)).sendKeys(LastName);
 		 TH3.HTMLScreenShot("Enter LastName","LastName Succefully Entered","Pass", HtmlOutputFileName,driver);
 		 
-		 driver.findElement(By.xpath(OR.Emp_id_sendkey)).clear();
-		 driver.findElement(By.xpath(OR.Emp_id_sendkey)).sendKeys(Id);
+		 findElement(By.xpath(OR.Emp_id_sendkey)).clear();
+		 findElement(By.xpath(OR.Emp_id_sendkey)).sendKeys(Id);
 		 TH3.HTMLScreenShot("Enter Id","Id Succefully Entered","Pass", HtmlOutputFileName,driver);
 		 
 		 
-		 driver.findElement(By.xpath(OR.Emp_save_click)).click();
+		 findElement(By.xpath(OR.Emp_save_click)).click();
 		 
 		
 	
